@@ -1,0 +1,246 @@
+--PROJECT TITLE: E-Commerce Domain: Exploring the Data with SQL.
+
+--Create The Datbase:-
+
+CREATE DATABASE E_COMMERCE_DOMAIN
+
+--Use The Datebase:-
+
+USE E_COMMERCE_DOMAIN
+
+--Import The Data in SQL:-
+
+SELECT * FROM Customers_review_table
+
+SELECT * FROM Customers_table
+
+SELECT * FROM Order_items_table
+
+SELECT * FROM Orders_table
+
+SELECT * FROM Payments_table
+
+SELECT * FROM Products_table
+
+SELECT * FROM Sellers_table
+
+--CLEANING THE DATA OF ALL THE TABLES :-
+
+----CLEAN ORDER TABLE:-
+
+SELECT * FROM Orders_table
+
+-- CHECK DUPLICATES AND REMOVE THEM:-
+
+SELECT ORDER_ID , COUNT(*) FROM ORDERS_TABLE
+GROUP BY ORDER_ID
+HAVING COUNT(*) >1
+
+-- NO DUPLICATES .
+
+--CHECK NULL VALUES AND DELETE THEM:-
+SELECT CUSTOMER_ID FROM ORDERS_TABLE WHERE CUSTOMER_ID IS NULL
+
+--NO NULL VALUES.
+
+--FIX THE DATETIME :-
+
+ALTER TABLE ORDERS_TABLE
+ALTER COLUMN ORDER_PURCHASE_TIMESTAMP DATETIME
+
+----CLEAN CUSTOMERS TABLE:-
+SELECT * FROM CUSTOMERS_TABLE
+
+--CHECKING DUPLICATES AND DELETE THEM:-
+
+SELECT CUSTOMER_ID , COUNT(*) FROM CUSTOMERS_TABLE
+GROUP BY CUSTOMER_ID
+HAVING COUNT(*) >1
+
+--NO DUPLICATES.
+
+--CHECKING NULL VALUES :-
+
+SELECT * FROM CUSTOMERS_TABLE WHERE CUSTOMER_UNIQUE_ID IS NULL
+
+--NO NULL VALUES.
+
+--STANDARDIZE TEXTS:-
+
+UPDATE CUSTOMERS_TABLE
+SET CUSTOMER_CITY = LOWER(CUSTOMER_CITY),
+    CUSTOMER_STATE = UPPER(CUSTOMER_STATE)
+
+----CLEAN SELLER TABLE:-
+SELECT * FROM SELLERS_TABLE
+
+-- CHECK DUPLICATES AND DELETE THEM:-
+
+SELECT SELLER_ID , COUNT(*) FROM SELLERS_TABLE
+GROUP BY SELLER_ID
+HAVING COUNT(*) > 1
+--NO DUPLICATES
+
+--STANDARDIZE TEXT:-
+
+UPDATE SELLERS_TABLE
+SET SELLER_CITY = LOWER(SELLER_CITY),
+    SELLER_STATE= UPPER(SELLER_STATE)
+
+----CLEAN PRODUCT TABLE:-
+SELECT * FROM PRODUCTS_TABLE
+
+--CHECK DUPLICATES AND REMOVE THEM:-
+
+SELECT PRODUCT_ID , COUNT(*) FROM PRODUCTS_TABLE
+GROUP BY PRODUCT_ID
+HAVING COUNT(*) > 1
+
+--NO DUPLICATES.
+
+--STANDARDIZE CATEGORY TEXT:-
+
+UPDATE PRODUCTS_TABLE
+SET PRODUCT_CATEGORY_NAME = LOWER(PRODUCT_CATEGORY_NAME)
+
+--HANDLE NULL VALUES:-
+
+UPDATE PRODUCTS_TABLE
+SET PRODUCT_PHOTOS_QTY=0
+WHERE PRODUCT_PHOTOS_QTY IS NULL
+
+--SET NULL AS UNKNOWN
+
+UPDATE PRODUCTS_TABLE
+SET product_category_name = 'Unknown'
+WHERE product_category_name IS NULL
+
+----CLEAN ORDER ITEMS TABLE
+SELECT * FROM ORDER_ITEMS_TABLE
+
+--CHECK DUPLICATES VALUE:-
+
+SELECT ORDER_ID , COUNT(*) FROM ORDER_ITEMS_TABLE
+GROUP BY ORDER_ID
+HAVING COUNT(*) > 1
+
+--DUPLICATES FOUND , NOW REMOVE THEM
+
+WITH CTE AS (
+SELECT * , ROW_NUMBER() OVER (PARTITION BY ORDER_ID , ORDER_ITEM_ID ORDER BY ORDER_ID) AS DP
+FROM ORDER_ITEMS_TABLE)
+
+DELETE FROM CTE WHERE DP > 1
+
+--FIX DATETIME:-
+ALTER TABLE ORDER_ITEMS_TABLE
+ALTER COLUMN SHIPPING_LIMIT_DATE DATETIME
+
+----CLEAN CUSTOMER REVIEW TABLE :-
+SELECT * FROM Customers_review_table
+
+--CHECK NULLVALUES & HANDEL THEM:-
+
+SELECT * FROM Customers_review_table
+WHERE review_score IS NULL
+
+----CLEAN PAYMENT TABLE:-
+
+SELECT * FROM Payments_table
+
+-- CHECK DUPLICATES VALUE AND HANDLE IT:-
+
+SELECT order_id , COUNT(*) FROM Payments_table
+GROUP BY order_id
+HAVING COUNT(*) > 1
+
+WITH CTE AS (
+SELECT *, ROW_NUMBER() OVER (PARTITION BY ORDER_ID, payment_sequential ORDER BY ORDER_ID) AS RN
+FROM Payments_table)
+
+
+DELETE FROM CTE WHERE RN > 1
+
+--FIX DATA TYPE:-
+
+ALTER TABLE Payments_table
+ALTER COLUMN PAYMENT_VALUE FLOAT
+
+
+--FINISH DATA CLEANING:-
+
+--NOW MOVE TO THE ANALYSIS QUESTIONS :-
+
+--1) How much total money has the platform made so far, and how has it changed over time?
+
+SELECT SUM(PAYMENT_VALUE) AS 'TOTAL_REVENEU' FROM Payments_table
+
+SELECT FORMAT(O.order_purchase_timestamp, 'yyyy-MM') AS MONTH,
+ SUM(P.PAYMENT_VALUE) AS 'MONTHELY_REVENEU' FROM Payments_table P
+ JOIN Orders_table O
+ ON P.order_id = O.order_id
+ GROUP BY FORMAT(order_purchase_timestamp, 'yyyy-MM')
+ ORDER BY MONTH
+
+
+ --2) Which product categories are the most popular, and how do their sales numbers compare?
+
+SELECT PR.product_category_name, COUNT(O.order_item_id) AS 'TOTAL_ITEM_SOLD',
+SUM(O.price) AS 'TOTAL_REVENEU' FROM Products_table PR
+JOIN Order_items_table O
+ON PR.product_id= O.product_id
+GROUP BY product_category_name
+ORDER BY TOTAL_ITEM_SOLD DESC
+
+
+--3)What is the average amount spent per order, and how does it change depending on the product category or payment method?
+
+SELECT AVG(PAYMENT_VALUE) AS 'AVG_PAYMENT_VALUE' FROM Payments_table
+
+SELECT PAYMENT_TYPE, AVG(PAYMENT_VALUE) AS 'AVG_PAYMENT_VAL' FROM Payments_table
+GROUP BY payment_type 
+
+
+SELECT PR.product_category_name, AVG(O.price) AS 'AVG_PRICE'
+FROM Products_table PR
+JOIN Order_items_table O
+ON PR.product_id= O.product_id
+GROUP BY product_category_name
+ORDER BY AVG_PRICE DESC
+
+--4)How many active sellers are there on the platform, and does this number go up or down over time?
+
+SELECT COUNT(DISTINCT SELLER_ID) AS 'COUNT_OF_SELLER'  FROM Sellers_table
+
+SELECT FORMAT(O.ORDER_PURCHASE_TIMESTAMP , 'yyyy-MM') MONTH, 
+COUNT(DISTINCT OI.SELLER_ID) AS 'COUNT_OF_SELLER' FROM Orders_table O
+JOIN Order_items_table OI
+ON O.order_id = OI.order_id
+GROUP BY FORMAT(O.order_purchase_timestamp , 'yyyy-MM')
+ORDER BY MONTH DESC
+
+
+--5)Which products sell the most, and how have their sales changed over time?
+
+SELECT PRODUCT_ID , COUNT(*) AS 'TOTAL_ITEM_SOLD',
+SUM(PRICE) AS 'TOTAL_REVENEU' FROM Order_items_table
+GROUP BY product_id
+ORDER BY TOTAL_ITEM_SOLD DESC
+
+
+SELECT OI.PRODUCT_ID, FORMAT(O.ORDER_PURCHASE_TIMESTAMP, 'yyyy-MM') AS 'SALES_MONTH',
+COUNT(*) AS 'ITEM_SOLD', SUM(OI.PRICE) AS 'REVENEU' FROM Order_items_table OI
+JOIN Orders_table O
+ON OI.order_id = O.order_id
+GROUP BY OI.product_id , FORMAT(O.ORDER_PURCHASE_TIMESTAMP, 'yyyy-MM')
+ORDER BY OI.PRODUCT_ID,SALES_MONTH 
+
+
+--6) Do customer reviews and ratings help products sell more or perform better on the platform? 
+--  (Check sales with higher or lower ratings and identify if any correlation is there)
+
+SELECT OI.PRODUCT_ID, AVG(R.REVIEW_SCORE) AS 'AVG_SCORE',
+COUNT(*) AS 'ITEM_SOLD' , SUM(OI.PRICE) AS 'REVENEU' FROM Order_items_table OI
+JOIN Customers_review_table R
+ON R.order_id = OI.order_id
+GROUP BY OI.product_id, R.review_score
