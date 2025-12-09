@@ -1,34 +1,119 @@
+A full-stack E-Commerce Sales & Customer Insights Dashboard built using Power BI and Excel, featuring Sales trends, Customer behavior, Delivery performance, Product profitability, and State-level analysis for data-driven decision-making.
 
-Project Summary
-This project focused on analysing a real-world e-commerce dataset to uncover key business insights and performance trends. The dataset included information from various tables such as Customer Reviews, Order Items, Orders, Payments, Products, and Sellers.
-We utilized SQL Server for data cleaning, transformation, and table joins. Power BI was used to create interactive dashboards and visuals.
-The primary goal was to analyse sales performance, customer behaviour, product popularity, and the impact of reviews and delivery times on overall business outcomes.
-The final analysis provided a comprehensive view of customer engagement, revenue generation, and operational efficiency. The dashboard delivers critical insights for stakeholders, enabling more informed, data-driven business decisions.
+E-Commerce Sales & Customer Insights Dashboard (Power BI & Excel)
 
-Key Metrics (KPIs)
-Total Revenue: ₹1,60,08,872.12
-Total Orders: 99,441
-Total Customers: 99,441
-Average Order Value (AOV): ₹160.99
-Average Rating: ⭐ 4.09
-Average Delivery Days: 12.50 days
+This project is a complete E-Commerce Analytics Dashboard designed using Power BI and supported by structured Excel datasets.
+It analyzes Sales performance, Customer behavior, Product trends, Delivery efficiency, and Review insights across multiple time periods.
 
+🚀 Key Features
+1️⃣ Overview Dashboard
 
-Key Insights
+<img width="6266" height="3825" alt="E-Commerce Sales   Customer Insights Dashboard  Power BI   Excel-1" src="https://github.com/user-attachments/assets/6b292d83-0874-4ae4-a5e4-f1ec47d8a775" />
 
-1. Customer Behaviour – Repeat vs. One-Time Buyers
-Repeat customers contributed significantly to total revenue, showing strong brand loyalty.
-One-time customers represent a valuable opportunity for future retention and engagement strategies.
-2. Revenue and Sales Trends
-Sales and revenue increased steadily over time, with noticeable seasonal peaks.
-The Average Order Value remained consistent, reflecting stable purchasing patterns.
-3. Impact of Ratings and Reviews
-Products with an average rating of 4 stars or more had noticeably higher sales volumes.
-A higher number of reviews enhanced product credibility and buyer trust.
-4. Top Product Categories
-Categories such as Electronics, Apparel, and Books generated the highest revenue.
-Some emerging product categories showed a rising trend in customer interest.
-5. Delivery Time vs. Customer Satisfaction
-Faster delivery times were associated with higher customer satisfaction ratings.
-Late deliveries often resulted in lower review scores, impacting overall product perception.
+Total Sales: 13.59M
 
+Total Orders: 99K
+
+Avg Order Value: 136.62
+
+Profit Margin: 83.43%
+
+Top 5 Categories:
+
+bed_table & bath
+
+sports & leisure
+
+furniture & decoration
+
+beauty & health
+
+household utilities
+
+Sales Trend (2016–2018)
+
+State-wise Sales Map
+
+Review Score vs Delivery Days
+
+Target vs Actual Sales (Yearly) — e.g., 2018 achieved 7.39M vs target 5.18M (+42.69%)
+
+2️⃣ Customer Insights Dashboard
+
+<img width="6266" height="3825" alt="E-Commerce Sales   Customer Insights Dashboard  Power BI   Excel-2" src="https://github.com/user-attachments/assets/2b521b3b-ef35-4435-a0dd-57d51d26c2ad" />
+
+Total Customers: 99K
+
+Repeat Customers: 42
+
+Avg Orders per Customer: 1.00
+
+Top 6 Cities: São Paulo, Rio de Janeiro, Brasilia, Curitiba, Campinas, Belo Horizonte
+
+Repeat vs One-Time Customer Distribution
+
+Payment Type Usage:
+
+credit_card
+
+boleto
+
+debit_card
+
+voucher
+
+Monthly Active Customers (2016–2018)
+
+Review Score Distribution (1–5 stars)
+
+3️⃣ Product Insights Dashboard
+
+<img width="6266" height="3825" alt="E-Commerce Sales   Customer Insights Dashboard  Power BI   Excel-3" src="https://github.com/user-attachments/assets/3694f4e8-8ed6-43df-b873-f183da928115" />
+
+Total Products Listed: 32K
+
+Top Selling Category: beauty & health
+
+Avg Rating: 4.09
+
+Total Reviews: 99K
+
+Top 10 Product Categories
+
+Profit vs Price Count by Category
+
+Product Count by Category & Seller State
+
+Sales Trend of Top 5 Categories (2016–2018)
+
+4️⃣ Delivery Dashboard
+
+<img width="6266" height="3825" alt="E-Commerce Sales   Customer Insights Dashboard  Power BI   Excel-4" src="https://github.com/user-attachments/assets/34e66f45-9b58-4a53-8048-c1548627fb6b" />
+
+Total Orders Delivered: 97K
+
+Delivery Success Rate: 97.02%
+
+Avg Delivery Time: 12.50 Days
+
+Delivery Time by State & Rating
+
+Examples: BA (96.40 score), ES (78.61), GO (77.68)
+
+Order Status Distribution: approved, canceled, shipped, delivered, invoiced, processing
+
+Monthly Sales (Seasonal trends)
+
+Avg Delivery Time by Month & Payment Method
+
+🛠️ Tools & Technologies Used
+
+Power BI Desktop
+
+Power Query
+
+DAX (Data Analysis Expressions)
+
+Excel (Data Source & Transformations)
+
+Data Modeling & Relationships
